@@ -11,14 +11,30 @@ namespace BulkyWeb.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
+        public IActionResult Index()            //getting categories
         {
             List<Category> objCategoryList = _db.Categories.ToList();
-            return View(objCategoryList);
+            return View(objCategoryList);           //return categories to view/index to display them
         }
 
         public IActionResult Create()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Category obj)
+        {
+            //if (obj.Name == obj.DisplayOrder.ToString()) 
+            //{
+            //    ModelState.AddModelError("Name", "The displayOrder cannot exactly match the Name");
+            //}
+            if(ModelState.IsValid) 
+            {
+                _db.Categories.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index"/*,"Category"*/);   //Redirecting to index (action name). we skip controller name as we are in same controller
+            }
             return View();
         }
     }
